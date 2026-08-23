@@ -1,10 +1,11 @@
 import express from "express"
 import dotenv from "dotenv"
 import {connectDB, disconnectDB} from "./config/db.js"
+import authRoutes from './routes/authRoutes.js'
 
 dotenv.config()
 
-PORT = process.env.PORT
+const PORT = process.env.PORT
 
 const app = express()
 
@@ -13,6 +14,7 @@ connectDB()
 
 //middlewares
 app.use(express.json())
+app.use('/auth', authRoutes)
 
 app.listen(PORT, () => {
     console.log(`the server is running on: http://localhost:${PORT}`);
