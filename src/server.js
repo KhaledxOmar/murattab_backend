@@ -18,3 +18,28 @@ app.listen(PORT, () => {
     console.log(`the server is running on: http://localhost:${PORT}`);
 })
 
+
+process.on("unhandledRejection", async (err) => {
+    console.error("unhandledRejection:" ,err)
+    server.close( async () => {
+        await disconnectDB();
+        process.exit(1);
+    })
+})
+
+
+process.on("uncaugtException", async (err) => {
+    console.error("uncaugtException:" ,err)
+    await disconnectDB();
+    process.exit(1);
+})
+
+
+process.on("SIGTERM", async (err) => {
+    console.error("SIGTERM:" ,err)
+    server.close( async () => {
+        await disconnectDB();
+        process.exit(0);
+    })
+})
+

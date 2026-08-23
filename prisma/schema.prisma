@@ -1,0 +1,62 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  //output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+
+//models
+
+model User {
+  id String @id @default(uuid())
+  name String
+  email String @unique
+  password String
+  role Role @default(student)
+  createdAt DateTime @default(now())
+
+  //relations
+  createdCourses Course[] @relation("CourseCreator") // for a teacher
+  enrollments Enrollment[] // for a student because he might be enrolled in many courses
+}
+
+enum Role {
+  teacher
+  student
+}
+
+model Course {
+  id String @id @default(uuid())
+  title String 
+  description String?
+  price Float
+  teacherId String
+  createdAt DateTime @default(now())
+
+  //relations
+  creator User @relation("CourseCreator", fields: [teacherId], references: [id], onDelete: Cascade)
+  enrollments Enrollment[]
+}
+
+model Enrollment {
+  id String @id @default(uuid())
+  courseId String
+  studentId String
+  enrollmentDate DateTime @default(now())
+
+  //relations
+  student User @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  course Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  @@unique([studentId, courseId]) //so that the student do not enroll twice
+}
