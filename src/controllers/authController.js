@@ -120,6 +120,24 @@ const login = async (req, res) => {
     }
 }
 
+const logout = async (req, res) => {
+    try {
+        res.cookie('jwt', '', {
+            httpOnly: true,
+            path: '/', // so that it is deleted from all the app routes
+            sameSite: 'strict',
+            secure: process.env.NODE_ENV === 'production',
+            expires: new Date(0)
+        });
+        res.status(200).json({
+            message: "Logged out successfully"
+        })
+    }
+    catch (error) {
+
+    }
+}
 
 
-export {register, login}
+
+export {register, login, logout}
