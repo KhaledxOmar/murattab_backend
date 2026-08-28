@@ -10,7 +10,7 @@ router.post('/register', register)
 router.post('/login', login)
 
 // POST /auth/logout
-router.post('logout', logout)
+router.post('/logout', logout)
 
 
 
