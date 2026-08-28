@@ -21,7 +21,8 @@ const verifyToken = async (req, res, next) => {
     try{
         const decoded = jwt.verify(token, process.env.JWT_SECRET)
         const user = prisma.user.findUnique({
-            where: {id: decoded.id}
+            where: {id: decoded.id},
+            include: {createdCourses: true, enrollments: true}
         })
 
         console.log(decoded)
@@ -43,3 +44,5 @@ const verifyToken = async (req, res, next) => {
     }
 
 }
+
+export default verifyToken
