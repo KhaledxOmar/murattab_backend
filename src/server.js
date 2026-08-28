@@ -2,6 +2,7 @@ import express from "express"
 import dotenv from "dotenv"
 import {connectDB, disconnectDB} from "./config/db.js"
 import authRoutes from './routes/authRoutes.js'
+import publicCourseRoutes from './routes/publicCourseRoutes.js'
 
 dotenv.config()
 
@@ -15,6 +16,9 @@ connectDB()
 //middlewares
 app.use(express.json())
 app.use('/auth', authRoutes)
+
+// express will evaluate both of /teachers/:teacherId/courses and /courses/:id against the 2 path strings defined in this file:
+app.use(publicCourseRoutes)
 
 app.listen(PORT, () => {
     console.log(`the server is running on: http://localhost:${PORT}`);
